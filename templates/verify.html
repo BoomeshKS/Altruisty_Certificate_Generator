@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Certificate Verification</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='verify.css') }}">
+</head>
+<body>
+    <h1>Verify Certificate</h1>
+    <form action="/verify" method="post" enctype="multipart/form-data">
+        <label for="certificate">Upload Certificate (PDF):</label><br />
+        <input type="file" id="certificate" name="certificate" accept="application/pdf" required /><br /><br />
+        <label for="cert_type">Select Certificate Type:</label><br />
+        <select id="cert_type" name="cert_type" required>
+            <option value="offer_letter" selected>Offer Letter</option>
+            <option value="completion">Completion Certificate</option>
+        </select><br /><br />
+        <button type="submit">Verify</button>
+    </form>
+    {% if result %}
+    <h2>Verification Result: {{ result }}</h2>
+    {% endif %}
+</body>
+</html>

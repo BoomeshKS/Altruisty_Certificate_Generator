@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Certificate System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
+    <!-- <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .main-container {
+            text-align: center;
+            background: white;
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            max-width: 500px;
+        }
+        h1 {
+            color: #2c5aa0;
+            margin-bottom: 30px;
+            font-size: 32px;
+        }
+        .option-card {
+            display: inline-block;
+            margin: 15px;
+            padding: 30px;
+            background: linear-gradient(45deg, #f8f9fa, #e9ecef);
+            border-radius: 15px;
+            text-decoration: none;
+            color: #333;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 2px solid transparent;
+        }
+        .option-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            border-color: #2c5aa0;
+        }
+        .option-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #2c5aa0;
+        }
+        .option-desc {
+            font-size: 14px;
+            color: #666;
+        }
+    </style> -->
+</head>
+<body>
+    <div class="main-container">
+        <h1>🏢 Altruisty Innovation</h1>
+        <h2>Certificate Generator</h2>
+        <p>Select the type of certificate you want to generate or verify:</p>
+
+        <div class="card-cont">
+            <a href="/offer-form" class="option-card">
+                <div class="option-title">📄 Offer Letter</div>
+                <div class="option-desc">Generate internship offer letter</div>
+            </a>
+            
+            <a href="/completion-form" class="option-card">
+                <div class="option-title">🎓 Completion Certificate</div>
+                <div class="option-desc">Generate internship completion certificate</div>
+            </a>
+
+            <a href="/verify" class="option-card">
+                <div class="option-title">🔍 Verify Certificate</div>
+                <div class="option-desc">Verify existing certificates</div>
+            </a>
+        </div>
+        
+    </div>
+</body>
+</html>

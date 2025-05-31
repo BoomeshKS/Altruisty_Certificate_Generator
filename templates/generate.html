@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Certificate Generation</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='gen.css') }}">
+</head>
+<body>
+    <h1 class="gen-title">Generate Certificate</h1>
+    <form action="/generate" method="post" class="gen-form">
+        <label for="name">Name:</label><br />
+        <input type="text" id="name" name="name" required /><br /><br />
+        <label for="email">Email:</label><br />
+        <input type="email" id="email" name="email" required /><br /><br />
+        <label for="template">Select Certificate Template:</label><br />
+        <select id="template" name="template" required>
+            <option value="offer_letter" selected>Offer Letter</option>
+            <option value="course_completion">Course Completion</option>
+        </select><br /><br />
+        <button type="submit">Generate Certificate</button>
+    </form>
+</body>
+</html>

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Altruisty - Certificate of Completion Generator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='completion.css') }}">
+
+    <!-- <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        h1 {
+            color: #2c5aa0;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-style: italic;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+        }
+        input[type="text"], input[type="email"], input[type="date"], select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+        input[type="text"]:focus, input[type="email"]:focus, input[type="date"]:focus, select:focus {
+            border-color: #2c5aa0;
+            outline: none;
+            box-shadow: 0 0 5px rgba(44, 90, 160, 0.3);
+        }
+        .btn {
+            background: linear-gradient(45deg, #2c5aa0, #1e3f73);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            transition: transform 0.3s;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+        .form-row .form-group {
+            flex: 1;
+        }
+        .info-box {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #2c5aa0;
+        }
+    </style> -->
+</head>
+<body>
+    <div class="container">
+        <h1>🎓 Certificate of Completion</h1>
+        <p class="subtitle">Generate your internship completion certificate</p>
+        
+        <div class="info-box">
+            <strong>📋 Instructions:</strong><br>
+            Fill in the details below to generate your certificate of completion for the Altruisty Innovation internship program.
+        </div>
+        
+        <form action="/generate-completion" method="post">
+            <div class="form-group">
+                <label for="name">👤 Full Name:</label>
+                <input type="text" id="name" name="name" required 
+                       placeholder="Enter your full name as it should appear on the certificate">
+            </div>
+            
+            <div class="form-group">
+                <label for="email">📧 Email Address:</label>
+                <input type="email" id="email" name="email" required 
+                       placeholder="Enter your email address">
+            </div>
+            
+            <div class="form-group">
+                <label for="domain">💻 Internship Domain:</label>
+                <select id="domain" name="domain" required>
+                    <option value="Web Development">Web Development</option>
+                    <option value="Mobile App Development">Mobile App Development</option>
+                    <option value="Data Science">Data Science</option>
+                    <option value="Machine Learning">Machine Learning</option>
+                    <option value="UI/UX Design">UI/UX Design</option>
+                    <option value="Digital Marketing">Digital Marketing</option>
+                    <option value="Full Stack Development">Full Stack Development</option>
+                </select>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="start_date">📅 Start Date:</label>
+                    <input type="text" id="start_date" name="start_date" 
+                           placeholder="DD-MM-YYYY (e.g., 08-07-2024)" 
+                           pattern="[0-9]{2}-[0-9]{2}-[0-9]{4}" 
+                           title="Please use DD-MM-YYYY format">
+                </div>
+                
+                <div class="form-group">
+                    <label for="end_date">📅 End Date:</label>
+                    <input type="text" id="end_date" name="end_date" 
+                           placeholder="DD-MM-YYYY (e.g., 08-11-2024)" 
+                           pattern="[0-9]{2}-[0-9]{2}-[0-9]{4}" 
+                           title="Please use DD-MM-YYYY format">
+                </div>
+            </div>
+            
+            <button type="submit" class="btn">🎓 Generate Certificate</button>
+        </form>
+    </div>
+    
+    <script>
+        // Auto-fill current date if fields are empty
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date();
+            const fourMonthsAgo = new Date();
+            fourMonthsAgo.setMonth(today.getMonth() - 4);
+            
+            function formatDate(date) {
+                const day = String(date.getDate()).padStart(2, '0');
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const year = date.getFullYear();
+                return `${day}-${month}-${year}`;
+            }
+            
+            if (!document.getElementById('start_date').value) {
+                document.getElementById('start_date').value = formatDate(fourMonthsAgo);
+            }
+            if (!document.getElementById('end_date').value) {
+                document.getElementById('end_date').value = formatDate(today);
+            }
+        });
+    </script>
+</body>
+</html>
