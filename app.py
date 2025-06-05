@@ -256,18 +256,14 @@ def generate_certificate():
     pdf.cell(0, 10, txt=f"Reg No - {regno}", align='L')
 
     # Save to temp file
-    # cert_filename = f"Altruisty_Offer_Letter_{name.replace(' ', '_')}.pdf"
-    # cert_path = os.path.join('certificates', cert_filename)
-    # os.makedirs('certificates', exist_ok=True)
-    # pdf.output(cert_path)
-    import tempfile
-
-
     cert_filename = f"Altruisty_Offer_Letter_{name.replace(' ', '_')}.pdf"
-    temp_dir = tempfile.gettempdir() 
-    cert_path = os.path.join(temp_dir, cert_filename)
+    cert_path = os.path.join('certificates', cert_filename)
+    os.makedirs('certificates', exist_ok=True)
 
-    pdf.output(cert_path)
+    try:
+        pdf.output(cert_path)
+    except Exception as e:
+        return jsonify({'error': f'Failed to generate certificate: {str(e)}'}), 500
 
 
     # Save to DB and send email (your original code)
