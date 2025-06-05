@@ -287,7 +287,8 @@ def generate_certificate():
     return send_file(
         cert_path,
         as_attachment=True,
-        download_name=cert_filename,
+        # download_name=cert_filename,
+        download_name=f"Altruisty_Offer_Letter_{name.replace(' ', '_')}.pdf",
         mimetype='application/pdf',
     )
 
