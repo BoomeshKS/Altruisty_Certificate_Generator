@@ -256,10 +256,19 @@ def generate_certificate():
     pdf.cell(0, 10, txt=f"Reg No - {regno}", align='L')
 
     # Save to temp file
+    # cert_filename = f"Altruisty_Offer_Letter_{name.replace(' ', '_')}.pdf"
+    # cert_path = os.path.join('certificates', cert_filename)
+    # os.makedirs('certificates', exist_ok=True)
+    # pdf.output(cert_path)
+    import tempfile
+
+
     cert_filename = f"Altruisty_Offer_Letter_{name.replace(' ', '_')}.pdf"
-    cert_path = os.path.join('certificates', cert_filename)
-    os.makedirs('certificates', exist_ok=True)
+    temp_dir = tempfile.gettempdir() 
+    cert_path = os.path.join(temp_dir, cert_filename)
+
     pdf.output(cert_path)
+
 
     # Save to DB and send email (your original code)
     try:
