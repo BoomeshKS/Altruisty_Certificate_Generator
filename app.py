@@ -194,107 +194,6 @@ def index():
 def offer_form():
     return render_template('generate.html')
 
-
-# @app.route('/generate', methods=['POST'])
-# def generate_certificate():
-#     name = request.form.get('name')
-#     email = request.form.get('email')
-#     domain = request.form.get('domain')
-#     start_date = request.form.get('start_date')
-#     duration = request.form.get('duration')
-#     regno = request.form.get('regno')
-
-#     if not name or not email or not domain or not start_date or not duration or not regno:
-#         return jsonify({'error': 'All fields are required'}), 400
-    
-#     cert_num = generate_certificate_number()
-
-#     class PDF(FPDF):
-#         def header(self):
-#             self.image('intern_OL.jpg', 0, 0, 210, 297)
-
-#     pdf = PDF('P', 'mm', 'A4')
-#     pdf.add_page()
-#     pdf.set_margins(20, 20, 20)
-
-#     # Top-right date
-#     pdf.set_font("Arial", '', 12)
-#     current_date = datetime.datetime.now().strftime("%d-%m-%y")
-#     pdf.set_xy(159, 70)
-#     pdf.cell(40, 10, txt=f"DATE: {current_date}", border=0)
-
-#     # Top-left name line
-#     pdf.set_font("Arial", 'B', 12)
-#     pdf.set_xy(20, 80)
-#     pdf.cell(0, 10, txt=f"Dear {name},", ln=True)
-
-#     # Body paragraphs
-#     pdf.set_font("Arial", '', 13)
-#     pdf.set_xy(20, 95)
-#     para1 = (
-#         f"We are thrilled to inform you that you have been selected to participate in the Altruisty "
-#         f"Innovation Pvt Ltd Internship Program in the domain of {domain}. Congratulations!"
-#     )
-#     para2 = (
-#         f"The internship will commence on {start_date} and will last for a duration of "
-#         f"{duration}. During this time, you will have the opportunity to gain practical experience, learn from "
-#         f"industry experts, and collaborate with a team of domain professionals."
-#     )
-#     para3 = (
-#         "We are confident that your skills and dedication will contribute greatly to the success "
-#         "of our program, and we look forward to seeing the valuable contributions you will make."
-#     )
-#     pdf.multi_cell(170, 7, para1, 0, 'J')
-#     pdf.ln(4)
-#     pdf.multi_cell(170, 7, para2, 0, 'J')
-#     pdf.ln(4)
-#     pdf.multi_cell(170, 7, para3, 0, 'J')
-
-#     # Reg No at bottom
-#     pdf.set_font("Arial", 'B', 12)
-#     pdf.set_xy(150, 250)
-#     pdf.cell(0, 10, txt=f"Reg No - {regno}", align='L')
-
-#     # Save to temp file
-#     cert_filename = f"Altruisty_Offer_Letter_{name.replace(' ', '_')}.pdf"
-#     cert_path = os.path.join('certificates', cert_filename)
-#     os.makedirs('certificates', exist_ok=True)
-
-#     try:
-#         pdf.output(cert_path)
-#     except Exception as e:
-#         return jsonify({'error': f'Failed to generate certificate: {str(e)}'}), 500
-
-
-#     # Save to DB and send email (your original code)
-#     try:
-#         new_certificate = Certificate(name=name, email=email, certificate_number=cert_num)
-#         db.session.add(new_certificate)
-#         db.session.commit()
-#     except Exception as e:
-#         db.session.rollback()
-#         print(f"Database error: {e}")
-#         return jsonify({'error': f'Failed to save certificate to database: {str(e)}'}), 500
-
-#     send_certificate_email(
-#         name, email, cert_path,
-#         cert_type='offer_letter',
-#         start_date=start_date,
-#         end_date=None  # if you want to calculate end_date from start+duration, let me know
-#     )
-
-#     # Directly send file to download in browser
-#     return send_file(
-#         cert_path,
-#         as_attachment=True,
-#         download_name=cert_filename,
-#         mimetype='application/pdf',
-#     )
-
-
-
-
-
 @app.route('/generate', methods=['POST'])
 def generate_certificate():
     name = request.form.get('name')
@@ -319,7 +218,7 @@ def generate_certificate():
 
     # Top-right date
     pdf.set_font("Arial", '', 12)
-    current_date = datetime.datetime.now().strftime(" %d-%m-%y")
+    current_date = datetime.datetime.now().strftime("%d-%m-%y")
     pdf.set_xy(159, 70)
     pdf.cell(40, 10, txt=f"DATE: {current_date}", border=0)
 
@@ -355,54 +254,40 @@ def generate_certificate():
     pdf.set_xy(150, 250)
     pdf.cell(0, 10, txt=f"Reg No - {regno}", align='L')
 
-    import tempfile
-    import logging  
-
-    # Save to temp directory
-    cert_dir = os.path.join(tempfile.gettempdir(), 'certificates')
-    os.makedirs(cert_dir, exist_ok=True)
-    cert_filename = f"Altruisty_Offer_Letter_{name.replace(' ', '_')}_{cert_num}.pdf"  # Add cert_num for uniqueness
-    cert_path = os.path.join(cert_dir, cert_filename)
+    # Save to temp file
+    cert_filename = f"Altruisty_Offer_Letter_{name.replace(' ', '_')}.pdf"
+    cert_path = os.path.join('certificates', cert_filename)
+    os.makedirs('certificates', exist_ok=True)
 
     try:
         pdf.output(cert_path)
     except Exception as e:
-        logging.error(f"PDF generation error: {str(e)}")
         return jsonify({'error': f'Failed to generate certificate: {str(e)}'}), 500
 
-    # Save to DB
+    # Save to DB and send email (your original code)
     try:
         new_certificate = Certificate(name=name, email=email, certificate_number=cert_num)
         db.session.add(new_certificate)
         db.session.commit()
     except Exception as e:
         db.session.rollback()
-        logging.error(f"Database error: {str(e)}")
+        print(f"Database error: {e}")
         return jsonify({'error': f'Failed to save certificate to database: {str(e)}'}), 500
 
-    # Send email
-    try:
-        send_certificate_email(
-            name, email, cert_path,
-            cert_type='offer_letter',
-            start_date=start_date,
-            end_date=None
-        )
-    except Exception as e:
-        logging.error(f"Email error: {str(e)}")
-        return jsonify({'error': f'Failed to send email: {str(e)}'}), 500
+    send_certificate_email(
+        name, email, cert_path,
+        cert_type='offer_letter',
+        start_date=start_date,
+        end_date=None  # if you want to calculate end_date from start+duration, let me know
+    )
 
-    # Send file for download
-    if not os.path.exists(cert_path):
-        return jsonify({'error': 'Certificate file not found'}), 500
+    # Directly send file to download in browser
     return send_file(
         cert_path,
         as_attachment=True,
-        download_name=f"Altruisty_Offer_Letter_{name.replace(' ', '_')}.pdf",
-        mimetype='application/pdf'
+        download_name=cert_filename,
+        mimetype='application/pdf',
     )
-
-
 
 
 
