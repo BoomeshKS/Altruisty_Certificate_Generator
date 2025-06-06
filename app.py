@@ -213,7 +213,7 @@ def generate_certificate():
 
     class PDF(FPDF):
         def header(self):
-            self.image('static/intern_OL.jpg', 0, 0, 210, 297)
+            self.image('static/Intern_OL.jpg', 0, 0, 210, 297)
     pdf = PDF('P', 'mm', 'A4')
     pdf.add_page()
     pdf.set_margins(20, 20, 20)
