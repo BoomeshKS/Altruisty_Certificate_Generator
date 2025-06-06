@@ -27,6 +27,9 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
+from flask_cors import CORS
+CORS(app)
+
 # Define SQLAlchemy models
 class Certificate(db.Model):
     __tablename__ = 'certificates'
@@ -210,8 +213,7 @@ def generate_certificate():
 
     class PDF(FPDF):
         def header(self):
-            self.image('intern_OL.jpg', 0, 0, 210, 297)
-
+            self.image('static/intern_OL.jpg', 0, 0, 210, 297)
     pdf = PDF('P', 'mm', 'A4')
     pdf.add_page()
     pdf.set_margins(20, 20, 20)
