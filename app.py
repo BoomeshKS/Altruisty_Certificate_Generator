@@ -514,45 +514,48 @@ class ProfessionalCertificateEmailGenerator:
     def _initialize_templates(self) -> Dict[CertificateType, EmailTemplate]:
         return {
             CertificateType.OFFER_LETTER: EmailTemplate(
-                subject="🎉 Welcome to the Team - Your Internship Offer Awaits!",
+                subject="📋Your Internship Offer Letter",
                 greeting="Dear {name},",
+#                 main_content="""
+# We are absolutely thrilled to extend this internship opportunity to you!
+
+# Your application stood out among hundreds of candidates, and we're excited to have someone with your passion and potential join the Altruisty Innovation family.
+
+# 📋 **What's Next:**
+# • Review your comprehensive offer letter attached
+# • Complete onboarding materials (deadline: {deadline})
+# • Join our welcome orientation on {start_date}
+
+# This is just the beginning of an incredible journey that will shape your professional future. We can't wait to see the amazing contributions you'll make to our team!
+#                 """,
                 main_content="""
-We are absolutely thrilled to extend this internship opportunity to you!
+Thank you for joining Altruisty! We’re thrilled to have you on board. We hope it will be a fulfilling and enriching experience for you.
 
-Your application stood out among hundreds of candidates, and we're excited to have someone with your passion and potential join the Altruisty Innovation family.
+Feel free to reach out to us for any assistance during your internship. Your offer letter is attached for your reference.
 
-📋 **What's Next:**
-• Review your comprehensive offer letter attached
-• Complete onboarding materials (deadline: {deadline})
-• Join our welcome orientation on {start_date}
-
-This is just the beginning of an incredible journey that will shape your professional future. We can't wait to see the amazing contributions you'll make to our team!
+We encourage you to share this exciting opportunity on LinkedIn and in the WhatsApp group to celebrate this milestone!
                 """,
                 closing="Welcome aboard,",
-                signature="The Altruisty Innovation Talent Acquisition Team\n🚀 Building Tomorrow's Innovators",
+                signature="Hr & Business Analyst, Altruisty,\n\t8610604326",
                 tone="enthusiastic",
                 priority="high"
             ),
 
+
             CertificateType.COMPLETION: EmailTemplate(
-                subject="🏆 Congratulations, Graduate! Your Journey Continues...",
+                subject="📋Your Completion Certificate",
                 greeting="Dear {name},",
                 main_content="""
-What an incredible milestone you've reached!
+I hope this email finds you well. Congratulations on successfully completing your internship with Altruisty!
 
-Your dedication, growth, and outstanding performance during your {duration}-month internship with Altruisty Innovation has been truly inspiring. You've not only met every challenge head-on but exceeded our expectations at every turn.
+As a token of recognition for your dedication and hard work, please find attached your Certificate of Completion for the internship. This certificate acknowledges your contributions and the skills you demonstrated during your time with us.
 
-🌟 **Your Achievements:**
-• Successfully completed {projects_count} major projects
-• Demonstrated exceptional {key_skills}
-• Earned recognition from {mentor_name} and the entire team
+We are grateful for your efforts and commitment to the projects you undertook. It has been a pleasure having you on the team, and we wish you the very best in all your future endeavors.
 
-Your completion certificate is more than just a document—it's a testament to your hard work, resilience, and the bright future that lies ahead.
-
-We're proud to have been part of your professional journey and excited to see where your talents take you next!
+Should you need any further assistance or recommendations, please feel free to reach out.
                 """,
-                closing="With immense pride and best wishes,",
-                signature="The Altruisty Innovation Team\n✨ Celebrating Your Success",
+                closing="Best regards,\n aboard,",
+                signature="Hr & Business Analyst, Altruisty \n 8610604326",
                 tone="celebratory",
                 priority="high"
             ),
@@ -647,11 +650,11 @@ Great leaders are remembered not for what they achieved alone, but for what they
             "primary_color": "#2E86AB",
             "secondary_color": "#A23B72",
             "accent_color": "#F18F01",
-            "logo_url": "https://altruisty.com/assets/logo.png",
+            "logo_url": "https://altruisty.in/static/images/logo.png",            
             "social_media": {
                 "linkedin": "https://linkedin.com/company/altruisty",
-                "twitter": "@AltruistyInnovation",
-                "website": "https://altruisty.com"
+                "twitter": "@Altruisty",
+                "website": "https://altruisty.in/"
             },
             "footer_tagline": "Empowering Innovation • Building Futures • Creating Impact"
         }

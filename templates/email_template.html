@@ -82,12 +82,13 @@
             font-weight: 600;
             margin: 20px 0;
         }
+
     </style>
 </head>
 <body>
     <div class="email-container">
         <div class="header">
-            <img src="{{ logo_url }}" alt="Logo" class="logo" />
+            <img src="{{ logo_url }}" alt="Logo" class="logo" style="max-width: 150px; height: auto;"/>
         </div>
         <div class="greeting">{{ greeting }}</div>
         <div class="main-content">{{ main_content|safe }}</div>
