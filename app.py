@@ -823,6 +823,8 @@ import re
 
 app = Flask(__name__)
 
+
+
 # SQLAlchemy configuration for PostgreSQL with URL-encoded password
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres.pjljdredabkszotdbgfv:altruisty555T@aws-0-ap-south-1.pooler.supabase.com:5432/postgres'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres.zzpywybgxqqinpjsvwbz:altruisty555T@aws-0-ap-south-1.pooler.supabase.com:5432/postgres'
@@ -1490,5 +1492,10 @@ Great leaders are remembered not for what they achieved alone, but for what they
             ]
         }
 
-if __name__ == '__main__':
-    app.run(debug=True)
+
+def handler(environ, start_response):
+    return app.wsgi_app(environ, start_response)
+
+
+# if __name__ == '__main__':
+#     app.run(debug=True)
