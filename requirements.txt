@@ -6,3 +6,4 @@ fpdf==1.7.2
 psycopg2-binary==2.9.9
 gunicorn
 flask_cors
+gender-guesser

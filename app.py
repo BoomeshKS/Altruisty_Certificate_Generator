@@ -831,6 +831,11 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
+
+
+import gender_guesser.detector as gender_detector
+
+
 from flask_cors import CORS
 CORS(app)
 
@@ -997,7 +1002,7 @@ def generate_certificate():
         download_name=cert_filename,
         mimetype='application/pdf',
     )
-
+import requests
 @app.route('/completion-form')
 def completion_form():
     return render_template('completion_form.html')
@@ -1015,11 +1020,26 @@ def generate_completion_certificate():
     if not name or not email:
         return jsonify({'error': 'Name and email are required'}), 400
 
-    # Very basic gender guess based on name endings (optional enhancement)
+    # Use gender-guesser to infer gender
     def guess_gender(name):
-        if name.strip().split()[0].lower().endswith(('a', 'i')):
-            return 'her'
-        return 'his'
+        first_name = name.strip().split()[0]
+        try:
+            # Make request to Genderize.io API
+            response = requests.get(f'https://api.genderize.io?name={first_name}')
+            response.raise_for_status()  # Raise exception for bad status codes
+            data = response.json()
+            
+            # Map Genderize.io output to pronoun
+            if data.get('gender') == 'female':
+                return 'her'
+            elif data.get('gender') == 'male':
+                return 'his'
+            else:
+                return 'their'  # Default to gender-neutral pronoun for unknown
+        except requests.RequestException as e:
+            # Fallback to gender-neutral pronoun in case of API failure
+            print(f"Genderize.io API error: {e}")
+            return 'their'
 
     gender_pronoun = guess_gender(name)
     name_first = name.split()[0]
