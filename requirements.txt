@@ -3,8 +3,8 @@ Flask-SQLAlchemy==3.1.1
 SQLAlchemy==2.0.35
 PyPDF2==3.0.1
 fpdf==1.7.2
-psycopg2-binary==2.9.9
 gunicorn
 flask_cors
 gender-guesser
 requests
+psycopg2-binary>=2.9

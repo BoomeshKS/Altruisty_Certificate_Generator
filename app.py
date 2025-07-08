@@ -688,7 +688,5 @@ Great leaders are remembered not for what they achieved alone, but for what they
             ]
         }
 
-
-
 if __name__ == '__main__':
     app.run(debug=True)
