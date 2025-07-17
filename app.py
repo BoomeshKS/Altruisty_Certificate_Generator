@@ -304,17 +304,16 @@ def generate_completion_certificate():
     domain = request.form.get('domain', 'Web Development')
     start_date = request.form.get('start_date', '08-07-2024')
     end_date = request.form.get('end_date', '08-11-2024')
-    duration = request.form.get('duration', '4 months')  # use this dynamically
+    duration = request.form.get('duration', '4 months')
     regno = request.form.get('regno')
-    cert_type = request.form.get('cert-type', 'online')
-
+    cert_type = request.form.get('cert-type')
 
     if not name or not email:
         return jsonify({'error': 'Name and email are required'}), 400
 
     cert_num = generate_certificate_number()
 
-    # Very basic gender guess based on name endings (optional enhancement)
+    # Very basic gender guess based on name endings
     def guess_gender(name):
         if name.strip().split()[0].lower().endswith(('a', 'i')):
             return 'her'
@@ -336,10 +335,8 @@ def generate_completion_certificate():
 
     # Top right date
     pdf.set_xy(159, 80)
-    date_str = datetime.datetime.now().strftime(" %d-%m-%y")
+    date_str = datetime.datetime.now().strftime("%d-%m-%y")
     pdf.cell(40, 10, txt=f"DATE: {date_str}", border=0)
-
-    # pdf.cell(40, 10, txt=date_str, border=0, align='R')
 
     # Content
     pdf.set_xy(20, 100)
@@ -410,7 +407,9 @@ def generate_completion_certificate():
         print(f"Database error: {e}")
         return jsonify({'error': f'Failed to save certificate to database: {str(e)}'}), 500
 
-    send_certificate_email(name, email, cert_path, cert_type='completion')
+    # Only send email if cert_type is not 'offline'
+    if cert_type == 'online':
+        send_certificate_email(name, email, cert_path, cert_type='completion')
 
     return send_file(
         cert_path,
@@ -418,7 +417,6 @@ def generate_completion_certificate():
         download_name=f"Altruisty_Completion_Certificate_{name.replace(' ', '_')}.pdf",
         mimetype='application/pdf'
     )
-
 
 
 
