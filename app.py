@@ -1,3 +1,4 @@
+
 from flask import Flask, request, jsonify, render_template, send_file, render_template_string
 from flask_sqlalchemy import SQLAlchemy
 import string
@@ -19,20 +20,12 @@ import re
 
 app = Flask(__name__)
 
-
-
 # SQLAlchemy configuration for PostgreSQL with URL-encoded password
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres.pjljdredabkszotdbgfv:altruisty555T@aws-0-ap-south-1.pooler.supabase.com:5432/postgres'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres.zzpywybgxqqinpjsvwbz:altruisty555T@aws-0-ap-south-1.pooler.supabase.com:5432/postgres'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres.koqpqbxcakkvdclnldyq:boomesh555T@aws-0-ap-south-1.pooler.supabase.com:5432/postgres'
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
-
-
-
-import gender_guesser.detector as gender_detector
-
 
 from flask_cors import CORS
 CORS(app)
@@ -43,12 +36,14 @@ class Certificate(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255), nullable=False)
     email = db.Column(db.String(255), nullable=False)
+    certificate_number = db.Column(db.String(50), unique=True, nullable=False)
 
 class CompletedIntern(db.Model):
     __tablename__ = 'completed_interns'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255), nullable=False)
     email = db.Column(db.String(255), nullable=False)
+    certificate_number = db.Column(db.String(50), unique=True, nullable=False)
     domain = db.Column(db.String(255), nullable=False)
     start_date = db.Column(db.String(50), nullable=True)
     end_date = db.Column(db.String(50), nullable=True)
@@ -101,7 +96,100 @@ def send_certificate_email(name, email, filepath, cert_type='offer_letter', star
     except Exception as e:
         print(f"[ERROR] Failed to send email to {email}: {str(e)}")
 
+# Utility function to generate unique certificate number
+def generate_certificate_number():
+    metadata = "2025-AI"
+    encoded = base64.b32encode(metadata.encode()).decode()[:6]
+    uid = ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))
+    cert_num = encoded + uid
+    existing = Certificate.query.filter_by(certificate_number=cert_num).first()
+    if not existing:
+        return cert_num
+    else:
+        return generate_certificate_number()
+
 @app.route('/')
+# def index():
+#     return render_template_string('''
+#     <!DOCTYPE html>
+#     <html>
+#     <head>
+#         <title>Altruisty Certificate Generator</title>
+#         <style>
+#             body {
+#                 font-family: Arial, sans-serif;
+#                 background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+#                 min-height: 100vh;
+#                 margin: 0;
+#                 display: flex;
+#                 align-items: center;
+#                 justify-content: center;
+#             }
+#             .main-container {
+#                 text-align: center;
+#                 background: white;
+#                 padding: 50px;
+#                 border-radius: 20px;
+#                 box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+#                 max-width: 500px;
+#             }
+#             h1 {
+#                 color: #2c5aa0;
+#                 margin-bottom: 30px;
+#                 font-size: 32px;
+#             }
+#             .option-card {
+#                 display: inline-block;
+#                 margin: 15px;
+#                 padding: 30px;
+#                 background: linear-gradient(45deg, #f8f9fa, #e9ecef);
+#                 border-radius: 15px;
+#                 text-decoration: none;
+#                 color: #333;
+#                 transition: transform 0.3s, box-shadow 0.3s;
+#                 border: 2px solid transparent;
+#             }
+#             .option-card:hover {
+#                 transform: translateY(-5px);
+#                 box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+#                 border-color: #2c5aa0;
+#             }
+#             .option-title {
+#                 font-size: 20px;
+#                 font-weight: bold;
+#                 margin-bottom: 10px;
+#                 color: #2c5aa0;
+#             }
+#             .option-desc {
+#                 font-size: 14px;
+#                 color: #666;
+#             }
+#         </style>
+#     </head>
+#     <body>
+#         <div class="main-container">
+#             <h1>🏢 Altruisty Innovation</h1>
+#             <h2>Certificate Generator</h2>
+#             <p>Select the type of certificate you want to generate:</p>
+            
+#             <a href="/offer-form" class="option-card">
+#                 <div class="option-title">📄 Offer Letter</div>
+#                 <div class="option-desc">Generate internship offer letter</div>
+#             </a>
+            
+#             <a href="/completion-form" class="option-card">
+#                 <div class="option-title">🎓 Completion Certificate</div>
+#                 <div class="option-desc">Generate internship completion certificate</div>
+#             </a>
+#             <a href="/verify" class="option-card">
+#                 <div class="option-title">🔍 Verify Certificate</div>
+#                 <div class="option-desc">Verify existing certificates</div>
+#             </a>
+#         </div>
+#     </body>
+#     </html>
+#     ''')
+
 def index():
     return render_template('index.html')
 
@@ -121,6 +209,8 @@ def generate_certificate():
     if not name or not email or not domain or not start_date or not duration or not regno:
         return jsonify({'error': 'All fields are required'}), 400
     
+    cert_num = generate_certificate_number()
+
     class PDF(FPDF):
         def header(self):
             self.image('static/Intern_OL.jpg', 0, 0, 210, 297)
@@ -176,9 +266,9 @@ def generate_certificate():
     except Exception as e:
         return jsonify({'error': f'Failed to generate certificate: {str(e)}'}), 500
 
-    # Save to DB and send email
+    # Save to DB and send email (your original code)
     try:
-        new_certificate = Certificate(name=name, email=email)
+        new_certificate = Certificate(name=name, email=email, certificate_number=cert_num)
         db.session.add(new_certificate)
         db.session.commit()
     except Exception as e:
@@ -190,7 +280,7 @@ def generate_certificate():
         name, email, cert_path,
         cert_type='offer_letter',
         start_date=start_date,
-        end_date=None
+        end_date=None  # if you want to calculate end_date from start+duration, let me know
     )
 
     # Directly send file to download in browser
@@ -200,7 +290,9 @@ def generate_certificate():
         download_name=cert_filename,
         mimetype='application/pdf',
     )
-import requests
+
+
+
 @app.route('/completion-form')
 def completion_form():
     return render_template('completion_form.html')
@@ -212,32 +304,21 @@ def generate_completion_certificate():
     domain = request.form.get('domain', 'Web Development')
     start_date = request.form.get('start_date', '08-07-2024')
     end_date = request.form.get('end_date', '08-11-2024')
-    duration = request.form.get('duration', '4 months')
+    duration = request.form.get('duration', '4 months')  # use this dynamically
     regno = request.form.get('regno')
+    cert_type = request.form.get('cert-type', 'online')
+
 
     if not name or not email:
         return jsonify({'error': 'Name and email are required'}), 400
 
-    # Use gender-guesser to infer gender
+    cert_num = generate_certificate_number()
+
+    # Very basic gender guess based on name endings (optional enhancement)
     def guess_gender(name):
-        first_name = name.strip().split()[0]
-        try:
-            # Make request to Genderize.io API
-            response = requests.get(f'https://api.genderize.io?name={first_name}')
-            response.raise_for_status()  # Raise exception for bad status codes
-            data = response.json()
-            
-            # Map Genderize.io output to pronoun
-            if data.get('gender') == 'female':
-                return 'her'
-            elif data.get('gender') == 'male':
-                return 'his'
-            else:
-                return 'their'  # Default to gender-neutral pronoun for unknown
-        except requests.RequestException as e:
-            # Fallback to gender-neutral pronoun in case of API failure
-            print(f"Genderize.io API error: {e}")
-            return 'their'
+        if name.strip().split()[0].lower().endswith(('a', 'i')):
+            return 'her'
+        return 'his'
 
     gender_pronoun = guess_gender(name)
     name_first = name.split()[0]
@@ -245,7 +326,8 @@ def generate_completion_certificate():
 
     class PDF(FPDF):
         def header(self):
-            self.image('intern_CC.jpg', 0, 0, 210, 297)
+            template_image = 'noseal.jpg' if cert_type == 'offline' else 'intern_CC.jpg'
+            self.image(template_image, 0, 0, 210, 297)
 
     pdf = PDF('P', 'mm', 'A4')
     pdf.add_page()
@@ -256,6 +338,8 @@ def generate_completion_certificate():
     pdf.set_xy(159, 80)
     date_str = datetime.datetime.now().strftime(" %d-%m-%y")
     pdf.cell(40, 10, txt=f"DATE: {date_str}", border=0)
+
+    # pdf.cell(40, 10, txt=date_str, border=0, align='R')
 
     # Content
     pdf.set_xy(20, 100)
@@ -293,11 +377,15 @@ def generate_completion_certificate():
     pdf.multi_cell(170, 6, txt=paragraph4, border=0, align='J')
     pdf.ln(15)
 
+    pdf.set_xy(20, 260)
+    pdf.set_font("Arial", 'I', 10)
+    pdf.cell(0, 10, txt=f"Certificate Number: {cert_num}", border=0, align='C')
+
     pdf.set_font("Arial", 'B', 12)
     pdf.set_xy(150, 250)
     pdf.cell(0, 10, txt=f"Reg No - {regno}", align='L')
 
-    cert_filename = f"completion_certificate_{regno}.pdf"
+    cert_filename = f"completion_certificate_{cert_num}.pdf"
     cert_path = os.path.join('certificates', cert_filename)
     os.makedirs('certificates', exist_ok=True)
 
@@ -310,6 +398,7 @@ def generate_completion_certificate():
         new_intern = CompletedIntern(
             name=name,
             email=email,
+            certificate_number=cert_num,
             domain=domain,
             start_date=start_date,
             end_date=end_date
@@ -329,6 +418,10 @@ def generate_completion_certificate():
         download_name=f"Altruisty_Completion_Certificate_{name.replace(' ', '_')}.pdf",
         mimetype='application/pdf'
     )
+
+
+
+
 
 @app.route('/verify', methods=['GET', 'POST'])
 def verify_certificate():
@@ -357,6 +450,7 @@ def verify_certificate():
                 os.remove(filepath)
                 return render_template('verify.html', result=result)
             name = None
+            cert_num = None
             cert_type = request.form.get('cert_type', 'offer_letter')
             match_name = None
             if cert_type == 'completion':
@@ -371,15 +465,20 @@ def verify_certificate():
                     name = None
             else:
                 name = match_name.group(1).strip()
-            print(f"Parsed name: {name}")
+            match_cert = re.search(r"Certificate Number:\s*(\S+)", text, re.IGNORECASE)
+            if match_cert:
+                cert_num = match_cert.group(1).strip()
+            print(f"Parsed name: {name}, certificate number: {cert_num}")
             if not name:
                 name = None
+            if not cert_num:
+                cert_num = ""
             cert_type = request.form.get('cert_type', 'offer_letter')
             try:
                 if cert_type == 'offer_letter':
-                    record = Certificate.query.filter_by(name=name).first()
+                    record = Certificate.query.filter_by(name=name, certificate_number=cert_num).first()
                 elif cert_type == 'completion':
-                    record = CompletedIntern.query.filter_by(name=name).first()
+                    record = CompletedIntern.query.filter_by(name=name, certificate_number=cert_num).first()
                 else:
                     result = "Invalid certificate type"
                     return render_template('verify.html', result=result)
@@ -419,6 +518,18 @@ class ProfessionalCertificateEmailGenerator:
             CertificateType.OFFER_LETTER: EmailTemplate(
                 subject="📋Your Internship Offer Letter",
                 greeting="Dear {name},",
+#                 main_content="""
+# We are absolutely thrilled to extend this internship opportunity to you!
+
+# Your application stood out among hundreds of candidates, and we're excited to have someone with your passion and potential join the Altruisty Innovation family.
+
+# 📋 **What's Next:**
+# • Review your comprehensive offer letter attached
+# • Complete onboarding materials (deadline: {deadline})
+# • Join our welcome orientation on {start_date}
+
+# This is just the beginning of an incredible journey that will shape your professional future. We can't wait to see the amazing contributions you'll make to our team!
+#                 """,
                 main_content="""
 Thank you for joining Altruisty! We’re thrilled to have you on board. We hope it will be a fulfilling and enriching experience for you.
 
@@ -431,6 +542,7 @@ We encourage you to share this exciting opportunity on LinkedIn and in the Whats
                 tone="enthusiastic",
                 priority="high"
             ),
+
 
             CertificateType.COMPLETION: EmailTemplate(
                 subject="📋Your Completion Certificate",
