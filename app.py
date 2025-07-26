@@ -350,7 +350,7 @@ def generate_completion_certificate():
             f"{domain}."
         )
         paragraph2 = (
-            f"Throughout the Duration of the Internship, {name_first} has Demonstrated Remarkable "
+            f"Throughout the Duration of the Internship, {name} has Demonstrated Remarkable "
             f"Growth and Development, Gaining Valuable Experience and Insights Into The Field of "
             f"{domain}."
         )
@@ -369,7 +369,7 @@ def generate_completion_certificate():
             f"{domain}."
         )
         paragraph2 = (
-            f"Throughout the duration of the internship, {name_first} has demonstrated remarkable "
+            f"Throughout the duration of the internship, {name} has demonstrated remarkable "
             "growth and development, gaining valuable experience and insights into the field of "
             f"{domain}."
         )
