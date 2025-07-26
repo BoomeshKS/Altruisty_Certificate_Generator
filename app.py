@@ -325,7 +325,7 @@ def generate_completion_certificate():
 
     class PDF(FPDF):
         def header(self):
-            template_image = 'noseal.jpg' if cert_type == 'offline' else 'intern_CC.jpg'
+            template_image = 'noseal.png' if cert_type == 'offline' else 'intern_CC.png'
             self.image(template_image, 0, 0, 210, 297)
 
     pdf = PDF('P', 'mm', 'A4')
@@ -341,28 +341,46 @@ def generate_completion_certificate():
     # Content
     pdf.set_xy(20, 100)
     pdf.set_font("Arial", '', 11)
-
-    paragraph1 = (
-        f"This is to certify that {name} has successfully completed {duration} of internship "
-        f"with Altruisty Innovation Pvt Ltd. from {start_date} to {end_date}, in the domain of "
-        f"{domain}."
-    )
-
-    paragraph2 = (
-        f"Throughout the duration of the internship, {name_first} has demonstrated remarkable "
-        "growth and development, gaining valuable experience and insights into the field of "
-        f"{domain}."
-    )
-
-    paragraph3 = (
-        "Their commitment to learning and adapting to new challenges reflects Altruisty's core "
-        "values of excellence and innovation."
-    )
-
-    paragraph4 = (
-        f"We hereby acknowledge {name_first} {name_last} for {gender_pronoun} outstanding performance "
-        "and dedication during the internship tenure."
-    )
+    
+    
+    if cert_type == 'offline':
+        paragraph1 = (
+            f"This is to Certify that {name} has Successfully Completed a {duration} of Internship "
+            f"at Altruisty Innovation Pvt Ltd, from {start_date} to {end_date}, in the Domain of "
+            f"{domain}."
+        )
+        paragraph2 = (
+            f"Throughout the Duration of the Internship, {name_first} has Demonstrated Remarkable "
+            f"Growth and Development, Gaining Valuable Experience and Insights Into The Field of "
+            f"{domain}."
+        )
+        paragraph3 = (
+            "Their commitment to learning and adapting to new challenges reflects Altruisty's core "
+            "values of excellence and innovation."
+        )
+        paragraph4 = (
+            f"We hereby acknowledge {name_first} {name_last} for His outstanding performance "
+            f"and dedication during the internship tenure."
+        )
+    else:
+        paragraph1 = (
+            f"This is to certify that {name} has successfully completed {duration} of internship "
+            f"with Altruisty Innovation Pvt Ltd. from {start_date} to {end_date}, in the domain of "
+            f"{domain}."
+        )
+        paragraph2 = (
+            f"Throughout the duration of the internship, {name_first} has demonstrated remarkable "
+            "growth and development, gaining valuable experience and insights into the field of "
+            f"{domain}."
+        )
+        paragraph3 = (
+            "Their commitment to learning and adapting to new challenges reflects Altruisty's core "
+            "values of excellence and innovation."
+        )
+        paragraph4 = (
+            f"We hereby acknowledge {name_first} {name_last} for {gender_pronoun} outstanding performance "
+            f"and dedication during the internship tenure."
+        )
 
     # Draw text
     pdf.multi_cell(170, 6, txt=paragraph1, border=0, align='J')
