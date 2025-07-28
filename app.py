@@ -109,87 +109,6 @@ def generate_certificate_number():
         return generate_certificate_number()
 
 @app.route('/')
-# def index():
-#     return render_template_string('''
-#     <!DOCTYPE html>
-#     <html>
-#     <head>
-#         <title>Altruisty Certificate Generator</title>
-#         <style>
-#             body {
-#                 font-family: Arial, sans-serif;
-#                 background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-#                 min-height: 100vh;
-#                 margin: 0;
-#                 display: flex;
-#                 align-items: center;
-#                 justify-content: center;
-#             }
-#             .main-container {
-#                 text-align: center;
-#                 background: white;
-#                 padding: 50px;
-#                 border-radius: 20px;
-#                 box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-#                 max-width: 500px;
-#             }
-#             h1 {
-#                 color: #2c5aa0;
-#                 margin-bottom: 30px;
-#                 font-size: 32px;
-#             }
-#             .option-card {
-#                 display: inline-block;
-#                 margin: 15px;
-#                 padding: 30px;
-#                 background: linear-gradient(45deg, #f8f9fa, #e9ecef);
-#                 border-radius: 15px;
-#                 text-decoration: none;
-#                 color: #333;
-#                 transition: transform 0.3s, box-shadow 0.3s;
-#                 border: 2px solid transparent;
-#             }
-#             .option-card:hover {
-#                 transform: translateY(-5px);
-#                 box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-#                 border-color: #2c5aa0;
-#             }
-#             .option-title {
-#                 font-size: 20px;
-#                 font-weight: bold;
-#                 margin-bottom: 10px;
-#                 color: #2c5aa0;
-#             }
-#             .option-desc {
-#                 font-size: 14px;
-#                 color: #666;
-#             }
-#         </style>
-#     </head>
-#     <body>
-#         <div class="main-container">
-#             <h1>🏢 Altruisty Innovation</h1>
-#             <h2>Certificate Generator</h2>
-#             <p>Select the type of certificate you want to generate:</p>
-            
-#             <a href="/offer-form" class="option-card">
-#                 <div class="option-title">📄 Offer Letter</div>
-#                 <div class="option-desc">Generate internship offer letter</div>
-#             </a>
-            
-#             <a href="/completion-form" class="option-card">
-#                 <div class="option-title">🎓 Completion Certificate</div>
-#                 <div class="option-desc">Generate internship completion certificate</div>
-#             </a>
-#             <a href="/verify" class="option-card">
-#                 <div class="option-title">🔍 Verify Certificate</div>
-#                 <div class="option-desc">Verify existing certificates</div>
-#             </a>
-#         </div>
-#     </body>
-#     </html>
-#     ''')
-
 def index():
     return render_template('index.html')
 
@@ -359,7 +278,7 @@ def generate_completion_certificate():
             "values of excellence and innovation."
         )
         paragraph4 = (
-            f"We hereby acknowledge {name_first} {name_last} for His outstanding performance "
+            f"We hereby acknowledge {name} for {gender_pronoun} outstanding performance "
             f"and dedication during the internship tenure."
         )
     else:
@@ -378,7 +297,7 @@ def generate_completion_certificate():
             "values of excellence and innovation."
         )
         paragraph4 = (
-            f"We hereby acknowledge {name_first} {name_last} for {gender_pronoun} outstanding performance "
+            f"We hereby acknowledge {name} for {gender_pronoun} outstanding performance "
             f"and dedication during the internship tenure."
         )
 
