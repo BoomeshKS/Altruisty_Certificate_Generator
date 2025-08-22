@@ -21,8 +21,7 @@ import re
 app = Flask(__name__)
 
 # SQLAlchemy configuration for PostgreSQL with URL-encoded password
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres.koqpqbxcakkvdclnldyq:boomesh555T@aws-0-ap-south-1.pooler.supabase.com:5432/postgres'
-
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://mydb_lwg8_user:InaUxSVvr50LjTwSA8iXzChEIRaO9CEG@dpg-d2k7ug3e5dus738ufen0-a.singapore-postgres.render.com/mydb_lwg8'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
