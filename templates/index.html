@@ -1,84 +1,308 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Certificate System</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
-    <!-- <style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Altruisty Innovation</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #05070a;
+            --accent: #ffffff;
+            --anim-timing: cubic-bezier(0.65, 0, 0.35, 1);
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
             margin: 0;
+            min-height: 100vh;
+            background: var(--bg);
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(
+                circle at 50% 40%,
+                rgba(99, 102, 241, 0.25),
+                transparent 70%
+            );
+            z-index: -1;
+        }
+
+        /* ================= LOADER ================= */
+
+        #page-loader {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: var(--bg);
+            z-index: 9999;
+            transition: opacity 0.6s ease;
+        }
+
+        .brand-container {
             display: flex;
             align-items: center;
+            position: relative;
+        }
+
+        .svg-a-wrapper {
+            width: 160px;
+            height: 160px;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: shiftLeft 1.5s 1.5s var(--anim-timing) forwards;
+        }
+
+        .svg-a {
+            width: 100%;
+            height: 100%;
+            fill: none;
+            stroke: var(--accent);
+            stroke-width: 18;
+            stroke-linecap: butt;
+            stroke-linejoin: miter;
+            stroke-dasharray: 200;
+            stroke-dashoffset: 200;
+            filter: drop-shadow(0 0 6px rgba(99, 102, 241, 0.6));
+            animation: drawA 1.5s ease-out forwards;
+            animation-fill-mode: forwards;
+        }
+
+        .text-reveal {
+            display: flex;
+            padding-left: 120px;
+            font-size: 48px;
+            letter-spacing: 0.12em;
+            color: var(--accent);
+        }
+
+        .letter {
+            opacity: 0;
+            transform: translateX(-20px) skewX(-10deg);
+            filter: blur(5px);
+            background: linear-gradient(180deg, #fff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation-fill-mode: forwards;
+        }
+
+        .letter:nth-child(1) { animation: charIn 0.5s 1.8s forwards; }
+        .letter:nth-child(2) { animation: charIn 0.5s 1.9s forwards; }
+        .letter:nth-child(3) { animation: charIn 0.5s 2.0s forwards; }
+        .letter:nth-child(4) { animation: charIn 0.5s 2.1s forwards; }
+        .letter:nth-child(5) { animation: charIn 0.5s 2.2s forwards; }
+        .letter:nth-child(6) { animation: charIn 0.5s 2.3s forwards; }
+        .letter:nth-child(7) { animation: charIn 0.5s 2.4s forwards; }
+        .letter:nth-child(8) { animation: charIn 0.5s 2.5s forwards; }
+
+        @keyframes drawA {
+            to { stroke-dashoffset: 0; }
+        }
+
+        @keyframes shiftLeft {
+            to {
+                left: 0;
+                transform: translateX(-20%) scale(0.85);
+            }
+        }
+
+        @keyframes charIn {
+            to {
+                opacity: 1;
+                transform: translateX(0) skewX(0);
+                filter: blur(0);
+            }
+        }
+
+        /* ================= MAIN CONTENT ================= */
+
+        #main-content {
+            display: none;
+            min-height: 40vh;
+            padding: 80px 20px;
+            text-align: center;
+            color: white;
+            overflow: hidden;
+            transition: opacity 0.6s ease;
+            scroll-behavior: smooth;
+        }
+
+        .title {
+            font-size: 6.5rem;
+            font-weight: 800;
+            letter-spacing: 4px;
+            text-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+            margin-bottom: 0.5rem;
+            opacity: 0;
+            animation: slowFade 1.8s ease-out forwards;
+        }
+
+        .subtitle {
+            font-size: 2.8rem;
+            font-weight: 500;
+            opacity: 0.9;
+            letter-spacing: 2px;
+            margin-bottom: 5rem;
+            opacity: 0;
+            animation: slowFade 1.8s ease-out 0.4s forwards;
+        }
+
+        .cards-container {
+            display: flex;
+            gap: 2.5rem;
+            flex-wrap: wrap;
             justify-content: center;
         }
-        .main-container {
-            text-align: center;
-            background: white;
-            padding: 50px;
-            border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-            max-width: 500px;
-        }
-        h1 {
-            color: #2c5aa0;
-            margin-bottom: 30px;
-            font-size: 32px;
-        }
-        .option-card {
-            display: inline-block;
-            margin: 15px;
-            padding: 30px;
-            background: linear-gradient(45deg, #f8f9fa, #e9ecef);
-            border-radius: 15px;
+
+        .card {
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.07);
+            border-radius: 24px;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             text-decoration: none;
-            color: #333;
-            transition: transform 0.3s, box-shadow 0.3s;
-            border: 2px solid transparent;
+            color: #ffffff;
+            transition: all 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
+            padding: 1.5rem;
+            opacity: 0;
         }
-        .option-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-            border-color: #2c5aa0;
-        }
-        .option-title {
-            font-size: 20px;
-            font-weight: bold;
-            margin-bottom: 10px;
-            color: #2c5aa0;
-        }
-        .option-desc {
-            font-size: 14px;
-            color: #666;
-        }
-    </style> -->
-</head>
-<body>
-    <div class="main-container">
-        <h1>🏢 Altruisty Innovation</h1>
-        <h2>Certificate Generator</h2>
-        <p>Select the type of certificate you want to generate or verify:</p>
 
-        <div class="card-cont">
-            <a href="/offer-form" class="option-card">
-                <div class="option-title">📄 Offer Letter</div>
-                <div class="option-desc">Generate internship offer letter</div>
-            </a>
-            
-            <a href="/completion-form" class="option-card">
-                <div class="option-title">🎓 Completion Certificate</div>
-                <div class="option-desc">Generate internship completion certificate</div>
-            </a>
+        .card:nth-child(1) { animation: slowFadeUp 1.6s ease-out 0.8s forwards; }
+        .card:nth-child(2) { animation: slowFadeUp 1.6s ease-out 1s forwards; }
+        .card:nth-child(3) { animation: slowFadeUp 1.6s ease-out 1.2s forwards; }
 
-            <a href="/verify" class="option-card">
-                <div class="option-title">🔍 Verify Certificate</div>
-                <div class="option-desc">Verify existing certificates</div>
-            </a>
-        </div>
+        .card:hover {
+            transform: translateY(-20px) scale(1.08);
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4);
+            border-color: rgba(255, 255, 255, 0.25);
+        }
+
+        .card-icon {
+            font-size: 3.2rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 1.2rem;
+            letter-spacing: 1px;
+        }
+
+        .card-btn {
+            font-size: 1rem;
+            font-weight: 500;
+            opacity: 0.85;
+            transition: opacity 0.4s ease;
+        }
+
+        .card:hover .card-btn {
+            opacity: 1;
+        }
+
+        @keyframes slowFade {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slowFadeUp {
+            from { opacity: 0; transform: translateY(60px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         
+
+
+    </style>
+</head>
+
+<body>
+
+<!-- LOADER -->
+<div id="page-loader">
+    <div class="brand-container">
+        <div class="svg-a-wrapper">
+            <svg viewBox="0 0 100 100">
+                <path class="svg-a"
+                    d="M18 88 L50 10 L82 88 M34 60 L66 60" />
+            </svg>
+        </div>
+
+        <div class="text-reveal">
+            <span class="letter">L</span>
+            <span class="letter">T</span>
+            <span class="letter">R</span>
+            <span class="letter">U</span>
+            <span class="letter">I</span>
+            <span class="letter">S</span>
+            <span class="letter">T</span>
+            <span class="letter">Y</span>
+        </div>
     </div>
+</div>
+
+<!-- MAIN CONTENT (Flask renders this immediately, but JS hides it) -->
+<main id="main-content" class="main-content">
+    <h1 class="title fade-in">Altruisty Innovation</h1>
+    <p class="subtitle fade-in">Certificate Management System</p>
+
+    <div class="cards-container">
+        <a href="/offer-form" class="card fade-in">
+            <div class="card-icon">📄</div>
+            <h3 class="card-title">Offer Letter</h3>
+            <span class="card-btn">View Page →</span>
+        </a>
+
+        <a href="/completion-form" class="card fade-in">
+            <div class="card-icon">🎓</div>
+            <h3 class="card-title">Completion Certificate</h3>
+            <span class="card-btn">View Page →</span>
+        </a>
+
+        <a href="/verify" class="card fade-in">
+            <div class="card-icon">✓</div>
+            <h3 class="card-title">Verify Certificate</h3>
+            <span class="card-btn">View Page →</span>
+        </a>
+    </div>
+</main>
+
+<script>
+    window.addEventListener("load", () => {
+        const loader = document.getElementById("page-loader");
+        const main = document.getElementById("main-content");
+
+        const LOADER_TIME = 2800; // must match animation timeline
+
+        setTimeout(() => {
+            loader.style.opacity = "0";
+
+            setTimeout(() => {
+                loader.remove();
+                main.style.display = "block";
+                document.body.style.overflow = "auto";
+            }, 600);
+        }, LOADER_TIME);
+    });
+</script>
+
 </body>
 </html>

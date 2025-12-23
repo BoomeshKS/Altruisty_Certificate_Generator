@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Page Not Found</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #ffffff;
+            color: #333333;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+        .container {
+            text-align: center;
+            z-index: 10;
+            animation: fadeIn 1.5s ease-out;
+        }
+        .error-code {
+            font-size: 120px;
+            font-weight: 700;
+            color: #4a90e2;
+            margin-bottom: 20px;
+            animation: pulseGlow 2s infinite alternate;
+        }
+        .message {
+            font-size: 28px;
+            margin-bottom: 20px;
+            opacity: 0;
+            animation: fadeInUp 1s ease-out 0.5s forwards;
+        }
+        .sub-message {
+            font-size: 18px;
+            margin-bottom: 40px;
+            color: #666666;
+            opacity: 0;
+            animation: fadeInUp 1s ease-out 1s forwards;
+        }
+        .home-btn {
+            padding: 12px 30px;
+            background: #4a90e2;
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 600;
+            border-radius: 50px;
+            transition: background 0.3s, transform 0.3s;
+            opacity: 0;
+            animation: fadeInUp 1s ease-out 1.5s forwards;
+        }
+        .home-btn:hover {
+            background: #357abd;
+            transform: translateY(-5px);
+        }
+
+        /* Unique floating particles animation */
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        .particle {
+            position: absolute;
+            background: rgba(74, 144, 226, 0.2);
+            border-radius: 50%;
+            animation: float 15s infinite linear;
+        }
+        .particle:nth-child(1) { width: 80px; height: 80px; top: 20%; left: 10%; animation-delay: 0s; }
+        .particle:nth-child(2) { width: 60px; height: 60px; top: 50%; left: 80%; animation-delay: 3s; }
+        .particle:nth-child(3) { width: 100px; height: 100px; top: 70%; left: 20%; animation-delay: 6s; }
+        .particle:nth-child(4) { width: 50px; height: 50px; top: 30%; left: 60%; animation-delay: 9s; }
+        .particle:nth-child(5) { width: 70px; height: 70px; top: 10%; left: 40%; animation-delay: 12s; }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes pulseGlow {
+            from { text-shadow: 0 0 20px rgba(74, 144, 226, 0.5); }
+            to { text-shadow: 0 0 40px rgba(74, 144, 226, 0.8); }
+        }
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+        }
+
+        @media (max-width: 768px) {
+            .error-code { font-size: 80px; }
+            .message { font-size: 24px; }
+            .sub-message { font-size: 16px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="particles">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+    <div class="container">
+        <h1 class="error-code">Oops !</h1>
+        <h2 class="message">We're Building Something Great</h2>
+        <p class="sub-message">This page is temporarily unavailable as we make improvements. Thank you for your patience!</p>
+        <a href="/" class="home-btn">Visit Homepage</a>
+    </div>
+</body>
+</html>
