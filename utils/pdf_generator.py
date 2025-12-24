@@ -1,13 +1,17 @@
 from fpdf import FPDF
 from io import BytesIO
 import datetime
+import os
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+IMAGE_PATH = os.path.join(BASE_DIR, '..', 'static', 'completion_bg.jpg')
 
 def generate_completion_pdf(name, domain, start_date, end_date, duration, regno):
     pdf_buffer = BytesIO()
 
     class PDF(FPDF):
         def header(self):
-            self.image('static/completion_bg.jpg', 0, 0, 210, 297)
+            self.image(IMAGE_PATH, 0, 0, 210, 297)
 
     pdf = PDF('P', 'mm', 'A4')
     pdf.add_page()
@@ -65,6 +69,8 @@ def generate_completion_pdf(name, domain, start_date, end_date, duration, regno)
     pdf.set_xy(135, 250)
     pdf.cell(60, 8, txt=f"REG:AIPLRP{regno.zfill(4)}", align='R')
 
-    pdf.output(pdf_buffer)
+    pdf_bytes = pdf.output(dest='S').encode('latin1')
+    pdf_buffer.write(pdf_bytes)
     pdf_buffer.seek(0)
+
     return pdf_buffer
