@@ -41,7 +41,11 @@ Altruisty Innovation Pvt Ltd
 
     context = ssl.create_default_context()
     try:
-        with smtplib.SMTP(Config.SMTP_SERVER, Config.SMTP_PORT) as smtp:
+        with smtplib.SMTP(
+            Config.SMTP_SERVER,
+            Config.SMTP_PORT,
+            timeout=10   # 🔑 prevents worker hang
+        ) as smtp:
             smtp.starttls(context=context)
             smtp.login(Config.SMTP_LOGIN, Config.SMTP_PASSWORD)
             smtp.send_message(msg)
