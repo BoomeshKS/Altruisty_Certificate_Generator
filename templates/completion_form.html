@@ -154,22 +154,22 @@
 
 
 <script>
-if (window.innerWidth <= 768) {
-  const text = document.querySelector(".mobile-fade");
-  const form = document.querySelector(".mobile-form");
+    if (window.innerWidth <= 768) {
+    const text = document.querySelector(".mobile-fade");
+    const form = document.querySelector(".mobile-form");
 
-  window.addEventListener("scroll", () => {
-    const formTop = form.getBoundingClientRect().top;
-    const fadeStart = window.innerHeight * 0.65;
-    const fadeEnd = window.innerHeight * 0.3;
+    window.addEventListener("scroll", () => {
+        const formTop = form.getBoundingClientRect().top;
+        const fadeStart = window.innerHeight * 0.65;
+        const fadeEnd = window.innerHeight * 0.3;
 
-    let progress = (formTop - fadeEnd) / (fadeStart - fadeEnd);
-    progress = Math.min(Math.max(progress, 0), 1);
+        let progress = (formTop - fadeEnd) / (fadeStart - fadeEnd);
+        progress = Math.min(Math.max(progress, 0), 1);
 
-    text.style.opacity = progress;
-    text.style.zIndex = progress < 0.15 ? "1" : "2";
-  });
-}
+        text.style.opacity = progress;
+        text.style.zIndex = progress < 0.15 ? "1" : "2";
+    });
+    }
 </script>
 
 
