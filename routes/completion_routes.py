@@ -15,37 +15,48 @@ def index():
 def completion_form():
     return render_template('completion_form.html')
 
+
 @completion_bp.route('/generate-completion', methods=['POST'])
 def generate_completion():
-    name = request.form.get('name')
-    email = request.form.get('email')
-    domain = request.form.get('domain')
-    start_date = request.form.get('start_date')
-    end_date = request.form.get('end_date')
-    duration = request.form.get('duration', '3 Month')
-    regno = request.form.get('regno')
+    try:
+        name = request.form.get('name')
+        email = request.form.get('email')
+        domain = request.form.get('domain')
+        start_date = request.form.get('start_date')
+        end_date = request.form.get('end_date')
+        duration = request.form.get('duration', '3 Month')
+        regno = request.form.get('regno')
 
-    if not all([name, email, domain, start_date, end_date, regno]):
-        return jsonify({'error': 'All fields are required'}), 400
+        if not all([name, email, domain, start_date, end_date, regno]):
+            return jsonify({'error': 'All fields are required'}), 400
 
-    cert_num = generate_certificate_number()
+        cert_num = generate_certificate_number()
 
-    # Generate PDF
-    pdf_buffer = generate_completion_pdf(name, domain, start_date, end_date, duration, regno)
+        # Generate PDF
+        pdf_buffer = generate_completion_pdf(
+            name, domain, start_date, end_date, duration, regno
+        )
 
-    filename = f"Altruisty_Completion_Certificate_{name.replace(' ', '_')}.pdf"
+        filename = f"Altruisty_Completion_Certificate_{name.replace(' ', '_')}.pdf"
 
-    # Log to Google Sheet
-    log_to_sheet_async(name, email, cert_num, domain, start_date, end_date, regno)
+        # Log to Google Sheet (already async)
+        log_to_sheet_async(name, email, cert_num, domain, start_date, end_date, regno)
 
-    # Send email if online
-    if request.form.get('cert-type') == 'online':
-        pdf_copy = BytesIO(pdf_buffer.getvalue())
-        send_email(name, email, pdf_copy, filename)
+        # Email should NEVER break the response
+        if request.form.get('cert-type') == 'online':
+            try:
+                pdf_copy = BytesIO(pdf_buffer.getvalue())
+                send_email(name, email, pdf_copy, filename)
+            except Exception as e:
+                print("❌ Email failed but continuing:", e)
 
-    return send_file(
-        pdf_buffer,
-        as_attachment=True,
-        download_name=filename,
-        mimetype='application/pdf'
-    )
+        return send_file(
+            pdf_buffer,
+            as_attachment=True,
+            download_name=filename,
+            mimetype='application/pdf'
+        )
+
+    except Exception as e:
+        print("🔥 SERVER ERROR:", e)
+        return jsonify({'error': 'Server error'}), 500
