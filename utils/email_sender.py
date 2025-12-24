@@ -1,11 +1,11 @@
-from threading import Thread
 from email.message import EmailMessage
 import smtplib
 import ssl
 from config import Config
 
-def send_email_async(name, email, pdf_buffer, filename):
-    subject = "🎉 Your Internship Completion Certificate - Altruisty Innovation Pvt Ltd"
+def send_email(name, email, pdf_buffer, filename):
+    subject = "Your Internship Completion Certificate - Altruisty Innovation Pvt Ltd"
+
     body = f"""
 Dear {name},
 
@@ -19,27 +19,34 @@ Best Regards,
 Bhavithra A N
 HR & Executive Lead
 Altruisty Innovation Pvt Ltd
-📞 8610604326 | ✉️ altruistybusiness@gmail.com
+📞 8610604326
     """
 
     msg = EmailMessage()
-    msg['Subject'] = subject
-    msg['From'] = Config.EMAIL_USER
-    msg['To'] = email
+    msg["Subject"] = subject
+    msg["From"] = Config.FROM_EMAIL   # sender
+    msg["To"] = email                # recipient
     msg.set_content(body)
-    msg.add_alternative(body.replace('\n', '<br>'), subtype='html')
+    msg.add_alternative(body.replace("\n", "<br>"), subtype="html")
 
     pdf_buffer.seek(0)
-    msg.add_attachment(pdf_buffer.read(), maintype='application', subtype='pdf', filename=filename)
+    msg.add_attachment(
+        pdf_buffer.read(),
+        maintype="application",
+        subtype="pdf",
+        filename=filename
+    )
 
-    def send():
-        context = ssl.create_default_context()
-        try:
-            with smtplib.SMTP_SSL('smtp.gmail.com', 465, context=context) as smtp:
-                smtp.login(Config.EMAIL_USER, Config.EMAIL_APP_PASSWORD)
-                smtp.send_message(msg)
-            print(f"[SUCCESS] Email sent to {email}")
-        except Exception as e:
-            print(f"[ERROR] Email failed: {e}")
+    print("📨 Sending email via Brevo SMTP...")
 
-    Thread(target=send).start()
+    context = ssl.create_default_context()
+    try:
+        with smtplib.SMTP(Config.SMTP_SERVER, Config.SMTP_PORT) as smtp:
+            smtp.starttls(context=context)
+            smtp.login(Config.SMTP_LOGIN, Config.SMTP_PASSWORD)
+            smtp.send_message(msg)
+
+        print(f"✅ Email sent successfully to {email}")
+
+    except Exception as e:
+        print(f"❌ Email failed: {e}")

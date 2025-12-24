@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify, render_template, send_file
 from utils.pdf_generator import generate_completion_pdf
-from utils.email_sender import send_email_async
+from utils.email_sender import send_email
 from utils.sheet_logger import log_to_sheet_async
 from utils.cert_utils import generate_certificate_number
 from io import BytesIO
@@ -41,7 +41,7 @@ def generate_completion():
     # Send email if online
     if request.form.get('cert-type') == 'online':
         pdf_copy = BytesIO(pdf_buffer.getvalue())
-        send_email_async(name, email, pdf_copy, filename)
+        send_email(name, email, pdf_copy, filename)
 
     return send_file(
         pdf_buffer,
