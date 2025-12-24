@@ -9,3 +9,4 @@ gender-guesser
 requests
 psycopg2-binary>=2.9
 flask-cors
+gunicorn
