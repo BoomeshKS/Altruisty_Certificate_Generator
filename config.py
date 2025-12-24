@@ -13,3 +13,4 @@ class Config:
     SMTP_PASSWORD = os.getenv("SMTP_PASSWORD")
 
     FROM_EMAIL = os.getenv("FROM_EMAIL")
+    BREVO_API_KEY = os.getenv("BREVO_API_KEY")

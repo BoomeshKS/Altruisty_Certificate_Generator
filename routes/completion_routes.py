@@ -4,6 +4,7 @@ from utils.email_sender import send_email
 from utils.sheet_logger import log_to_sheet_async
 from utils.cert_utils import generate_certificate_number
 from io import BytesIO
+import threading
 
 completion_bp = Blueprint('completion', __name__)
 
@@ -42,14 +43,17 @@ def generate_completion():
         # Log to Google Sheet (already async)
         log_to_sheet_async(name, email, cert_num, domain, start_date, end_date, regno)
 
-        # Email should NEVER break the response
+        # ✅ SEND EMAIL ASYNC (THIS IS THE KEY FIX)
         if request.form.get('cert-type') == 'online':
-            try:
-                pdf_copy = BytesIO(pdf_buffer.getvalue())
-                send_email(name, email, pdf_copy, filename)
-            except Exception as e:
-                print("❌ Email failed but continuing:", e)
+            pdf_copy = BytesIO(pdf_buffer.getvalue())
 
+            threading.Thread(
+                target=send_email,
+                args=(name, email, pdf_copy, filename),
+                daemon=True
+            ).start()
+
+        # Return PDF immediately (email runs in background)
         return send_file(
             pdf_buffer,
             as_attachment=True,
