@@ -23,8 +23,6 @@ def generate_completion_pdf(name, domain, start_date, end_date, duration, regno)
     pdf.set_xy(140, 80)
     pdf.cell(50, 8, txt=f"DATE: {current_date}", align='R')
 
-    # ---------------- Pronoun ----------------
-    pronoun = 'Her' if name.strip().split()[0].lower().endswith(('a', 'i')) else 'His'
 
     # ---------------- BODY TEXT ----------------
     pdf.set_font("Arial", '', 13)
@@ -59,7 +57,7 @@ def generate_completion_pdf(name, domain, start_date, end_date, duration, regno)
     pdf.ln(6)
 
     para4 = (
-        f"We hereby acknowledge {name} for {pronoun} outstanding performance "
+        f"We hereby acknowledge {name} for this outstanding performance "
         f"and dedication during the internship tenure."
     )
     pdf.multi_cell(text_width, line_height, para4, align='J')
