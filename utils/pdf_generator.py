@@ -65,7 +65,7 @@ def generate_completion_pdf(name, domain, start_date, end_date, duration, regno)
     # ---------------- REG NUMBER (Bottom Right) ----------------
     pdf.set_font("Arial", 'B', 13)
     pdf.set_xy(135, 250)
-    pdf.cell(60, 8, txt=f"REG:AIPLRP{regno.zfill(4)}", align='R')
+    pdf.cell(60, 8, txt=f"REG:{regno.zfill(4)}", align='R')
 
     pdf_bytes = pdf.output(dest='S').encode('latin1')
     pdf_buffer.write(pdf_bytes)
